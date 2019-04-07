@@ -1,0 +1,21 @@
+nav ul {
+    list-style: none;
+    width: '100%';
+    background-color: black;
+  }
+
+  nav ul li {
+    padding: 20px;
+  }
+
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+  }
+  
+
+  nav ul li a:hover{
+    color: white;
+    opacity: 0.7;
+    text-decoration: none;
+  }

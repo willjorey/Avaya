@@ -61,13 +61,31 @@ function getNewToken(oAuth2Client, callback) {
   });
 }
 
-function listConnectionNames(auth, response) {
+function getPeople(auth, id) {
+  return new Promise((resolve, reject)=>{
+    const service = google.people({version: 'v1', auth});
+    service.people.get({
+      resourceName: 'people/'+ id,
+      personFields: 'names,birthdays,genders',
+    }, (err, res) => {
+      if (err) return console.error('The API returned an error: ' + err);
+      const person = res.data;
+      if (person) {
+        resolve(person);
+      } else {
+        console.log('No connections found.');
+      }
+    });
+  })
+};
+
+function listConnectionNames(auth) {
   return new Promise((resolve, reject)=>{
     const service = google.people({version: 'v1', auth});
     service.people.connections.list({
       resourceName: 'people/me',
       pageSize: 10,
-      personFields: 'names,emailAddresses',
+      personFields: 'names,birthdays,genders',
     }, (err, res) => {
       if (err) return console.error('The API returned an error: ' + err);
       const connections = res.data.connections;
@@ -80,15 +98,24 @@ function listConnectionNames(auth, response) {
   })
 };
 
+// ROUTES
 app.get('/connections', (req, res) => {
-  listConnectionNames(oAuth2Client,res).then(resp => {
+  listConnectionNames(oAuth2Client,res).then(data => {
     res.status(201).json({
       message: "Handling GET requests to /connections",
-      'connections': resp,
+      'connections': data,
     });
   })
-
 });
 
+app.get('/people/:id', (req, res) => {
+  var id = req.params.id
+  getPeople(oAuth2Client, id).then(data =>{
+    res.status(201).json({
+      message: "Handling GET requests to /people",
+      'person': data,
+    });
+  })
+});
 
 module.exports = app;
