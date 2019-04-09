@@ -24,7 +24,14 @@ class Person extends Component {
         });
         console.log(person);
     }
-
+  
+    handleDelete = ()=>{
+      alert('Contact Deleted');
+      fetch('http://localhost:4000/delete/'+ this.id,{
+        method:'delete'
+      });
+    }
+  
   render() {
     return (
       <div className="Person">
@@ -33,7 +40,7 @@ class Person extends Component {
         <h3>{this.state.name}</h3>
         <p>My Birthday is:</p>
         <h3>{this.state.birthday}</h3>
-
+        <button onClick={this.handleDelete}>Delete</button>
       </div>
     );
   }

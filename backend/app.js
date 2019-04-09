@@ -2,13 +2,16 @@ var express = require('express');
 const {google} = require('googleapis');
 const fs = require('fs');
 const readline = require('readline');
+const bodyParser = require("body-parser");
 var cors = require('cors');
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 const TOKEN_PATH = 'token.json';
-var SCOPES = ['https://www.googleapis.com/auth/contacts.readonly'];
+var SCOPES = ['https://www.google.com/m8/feeds/'];
 var oAuth2Client;
 
 
@@ -98,6 +101,45 @@ function listConnectionNames(auth) {
   })
 };
 
+function createPerson(auth, person) {
+  var year = person.year;
+  var month = person.month;
+  var day = person.day;
+  var gender = person.gender;
+  var fname = person.fname;
+  var lname = person.lname;
+
+  return new Promise((resolve, reject)=>{
+    const service = google.people({version: 'v1', auth});
+    service.people.createContact({
+        requestBody:{
+          birthdays:[{date:{year: year, month: month, day:day}, text:month+'/'+day+'/'+year}],
+          names:[{
+            displayName: fname + ' ' + lname,
+            familyName:lname,
+            givenName:fname
+          }],
+          genders:[{value:gender}],
+        }
+    }, (err, res) => {
+      if (err) return console.error('The API returned an error: ' + err);
+      return "Contact Created";
+    });
+  })
+};
+
+function deletePerson(auth, id) {
+  return new Promise((resolve, reject)=>{
+    const service = google.people({version: 'v1', auth});
+    service.people.deleteContact({
+      resourceName: 'people/'+ id,
+    }, (err, res) => {
+      if (err) return console.error('The API returned an error: ' + err);
+      return "Contact Deleted"
+    });
+  })
+};
+
 // ROUTES
 app.get('/connections', (req, res) => {
   listConnectionNames(oAuth2Client,res).then(data => {
@@ -115,6 +157,33 @@ app.get('/people/:id', (req, res) => {
       message: "Handling GET requests to /people",
       'person': data,
     });
+  })
+});
+
+app.post('/create', (req, res) => {
+  console.log('REQUEST RECEIVED', req.body)
+  createPerson(oAuth2Client, req.body).then( msg => {
+    if(msg === "Contact Created" ){
+      res.status(201).json({
+        message: "Handling POST requests to /people",
+        'msg': msg,
+        'person': req.body
+      });
+    }
+  });
+});
+
+app.delete('/delete/:id', (req, res) => {
+  var id = req.params.id;
+  console.log('REQUEST RECIEVED', id);
+  deletePerson(oAuth2Client,id).then(msg =>{
+    if(msg === "Contact Deleted" ){
+      res.status(201).json({
+        message: "Handling DELETE requests to /people",
+        'msg': msg,
+        'resourceName': id
+      });
+    }
   })
 });
 
