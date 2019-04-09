@@ -11,7 +11,7 @@ Change directory to backend and install tha packages
 Run the server
 `nodemon server`
 
-##Authorization
+## Authorization
 
 User is prompted to visit a link to authorize the use of the app
 
@@ -30,5 +30,6 @@ In a new terminal change directory to `website` and run it
 
 `npm start`
 
-##Website
+## Website
+
 With the server and the web application running now, the user can see their contacts by clicking on "Get Connections". A table will appear and show all of the users contacts, which can be sorted by clicking on the headers. Users can then click on a person in the table to view the information and or delete the person from their contacts. In the navigation bar users can visit the "Create Contact" tab to create a new contact.

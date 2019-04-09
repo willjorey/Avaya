@@ -63,30 +63,33 @@ class CreateContact extends Component {
   };
   render() {
     return (
-      <div className="CreateContact">
+      <div>
         <Navigation/>
-        <h1>Create A Contact</h1>
-        <div className="form">
-          <form onSubmit={this.handleSubmit}>
-            <label>First Name</label>
-            <input type="text" onChange={this.handleFirstName}/><br/>
-            <label>Last Name</label>
-            <input type="text" onChange={this.handleLastName}/><br/>
-            <label>Gender</label>
-            <select value={this.state.gender} onChange={this.handleGender}>
-              <option value="None">None</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select><br/>
-            <label>Birthday</label>
-            <input type="number" min="0" placeholder="YYYY" onChange={this.handleYear}/>
-            <input type="number"  min="1" max="12" placeholder="MM" onChange={this.handleMonth}/>
-            <input type="number" min="1" max="31" placeholder="DD" onChange={this.handleDay}/>
-            <input type="submit" value="Submit"/>
-          </form>
+        <div className="CreateContact">
+          <h1>Create A Contact</h1>
+          <div className="form">
+            <form onSubmit={this.handleSubmit}>
+              <label>First Name</label><br/>
+              <input type="text" onChange={this.handleFirstName}/><br/>
+              <label>Last Name</label><br/>
+              <input type="text" onChange={this.handleLastName}/><br/>
+              <label>Gender</label>
+              <select value={this.state.gender} onChange={this.handleGender}>
+                <option value="None">None</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select><br/>
+              <label>Birthday</label>
+              <input type="number" min="0" placeholder="YYYY" onChange={this.handleYear}/>
+              <input type="number"  min="1" max="12" placeholder="MM" onChange={this.handleMonth}/>
+              <input type="number" min="1" max="31" placeholder="DD" onChange={this.handleDay}/><br/>
+              <input type="submit" value="Submit"/>
+            </form>
+          </div>
         </div>
       </div>
+
     );
   }
 }
